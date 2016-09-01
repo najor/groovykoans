@@ -7,11 +7,34 @@
 
 package org.groovykoans.koan09
 
-import org.codehaus.groovy.runtime.InvokerHelper
-
 class Robot {
     // ------------ START EDITING HERE ----------------------
 
+    int x, y
+
+    def invokeMethod(String name, Object args) {
+        if (name.startsWith('go')) {
+            (name =~ /(Left|Down|Right|Up)/).each { match, dir ->
+                this."${dir.toLowerCase()}"()
+            }
+        }
+    }
+
+    def left() {
+        x--
+    }
+
+    def right() {
+        x++
+    }
+
+    def up() {
+        y++
+    }
+
+    def down() {
+        y--
+    }
 
     // ------------ STOP EDITING HERE  ----------------------
 }

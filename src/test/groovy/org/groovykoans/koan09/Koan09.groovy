@@ -29,9 +29,10 @@ class Koan09 extends GroovyTestCase {
 
         // Create an Expando class and dynamically create a 'firstName' property set with some value. Also
         // add a sayHello() method that returns "Hello from ${firstName}"
-        def expando = new Expando()
+        def expando = new Expando(firstName: 'Peter')
         // ------------ START EDITING HERE ----------------------
 
+        expando.sayHello = { -> "Hello from ${firstName}" }
 
         // ------------ STOP EDITING HERE  ----------------------
 
@@ -49,6 +50,8 @@ class Koan09 extends GroovyTestCase {
         def proxy
         // ------------ START EDITING HERE ----------------------
 
+        proxy = ProxyMetaClass.getInstance(SensitiveService)
+        proxy.interceptor = new NukeInterceptor()
 
         // ------------ STOP EDITING HERE  ----------------------
 
@@ -70,6 +73,7 @@ class Koan09 extends GroovyTestCase {
         def expectedThisClassName
         // ------------ START EDITING HERE ----------------------
 
+        expectedThisClassName = this.class.name
 
         // ------------ STOP EDITING HERE  ----------------------
         assert this.class.name == expectedThisClassName
@@ -99,6 +103,8 @@ class Koan09 extends GroovyTestCase {
         def expectedWeightOnMoon, expectedWeightOnEarth
         // ------------ START EDITING HERE ----------------------
 
+        expectedWeightOnMoon = 10 * new ConstantsOnMoon().gravity
+        expectedWeightOnEarth = 10 * new ConstantsOnEarth().gravity
 
         // ------------ STOP EDITING HERE  ----------------------
         assert weightOnEarth == expectedWeightOnEarth
@@ -109,6 +115,7 @@ class Koan09 extends GroovyTestCase {
         // Create a fake environment using the technique in the link to create a gravity of 6
         // ------------ START EDITING HERE ----------------------
 
+        calculateWeight.delegate = [gravity: 6]
 
         // ------------ STOP EDITING HERE  ----------------------
         def weightOnFakePlanet = calculateWeight(10)
@@ -162,6 +169,23 @@ class Koan09 extends GroovyTestCase {
         //   - otherwise, return the number itself (as a String)
 
         // ------------ START EDITING HERE ----------------------
+
+        Integer.metaClass.fizzBuzz << {
+            String result = delegate
+            if (delegate % 3 == 0) {
+                result = 'Fizz'
+            }
+
+            if (delegate % 5 == 0) {
+                if (delegate % 3 == 0) {
+                    result += 'Buzz'
+                } else {
+                    result = 'Buzz'
+                }
+            }
+
+            result
+        }
 
 
         // ------------ STOP EDITING HERE  ----------------------
