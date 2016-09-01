@@ -29,6 +29,18 @@ class Koan08 extends GroovyTestCase {
         def magicClosure = { input ->
             // ------------ START EDITING HERE ----------------------
 
+            def result = input
+
+            switch (input) {
+                case 1..100:
+                    result = input / 2
+                    break;
+                case ~/.*?ee$/:
+                    result = input.replaceAll(/ee$/, 'ey')
+                    break;
+            }
+
+            result
 
             // ------------ STOP EDITING HERE  ----------------------
         }
@@ -88,6 +100,11 @@ class Koan08 extends GroovyTestCase {
         def generateTwoRandomInts = { int maxInt ->
             // ------------ START EDITING HERE ----------------------
 
+            Random rand = new Random()
+
+            def nextRandom = { Math.abs(rand.nextInt() % 10) }
+
+            [nextRandom(), nextRandom()]
 
             // ------------ STOP EDITING HERE  ----------------------
         }
