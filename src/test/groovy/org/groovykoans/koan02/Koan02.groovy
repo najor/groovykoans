@@ -21,6 +21,8 @@ class Koan02 extends GroovyTestCase {
 
         // ------------ START EDITING HERE ----------------------
 
+        predicate1 = true
+        predicate2 = false
 
         // ------------ STOP EDITING HERE  ----------------------
 
@@ -35,6 +37,8 @@ class Koan02 extends GroovyTestCase {
 
         // ------------ START EDITING HERE ----------------------
 
+        map.first = 'Primero'
+        list.removeAll { it }
 
         // ------------ STOP EDITING HERE  ----------------------
 
@@ -49,6 +53,8 @@ class Koan02 extends GroovyTestCase {
 
         // ------------ START EDITING HERE ----------------------
 
+        s2 = s1
+        s1 = ''
 
         // ------------ STOP EDITING HERE  ----------------------
 
@@ -66,6 +72,7 @@ class Koan02 extends GroovyTestCase {
         // Remove (or change) the offending integer to continue
         // ------------ START EDITING HERE ----------------------
 
+        balance.removeAll { it == 0 }
 
         // ------------ STOP EDITING HERE  ----------------------
 
