@@ -7,6 +7,8 @@
 
 package org.groovykoans.koan06
 
+import groovy.io.FileType
+
 /**
  * Koan06 - More closures
  *
@@ -35,6 +37,12 @@ class Koan06 extends GroovyTestCase {
         String groovyResult
         // ------------ START EDITING HERE ----------------------
 
+        groovyResult = new StringBuilder().with {
+            append("roses are #FF0000\\n");
+            append("violets are #0000FF\\n");
+            append("all my base\\n")
+            append("are belong to you\\n")
+        }.toString()
 
         // ------------ STOP EDITING HERE  ----------------------
         assert groovyResult == javaResult
@@ -51,6 +59,7 @@ class Koan06 extends GroovyTestCase {
         def uniqueTypes = []
         // ------------ START EDITING HERE ----------------------
 
+        uniqueTypes += differentTypes.collect{ it.class }.unique()
 
         // ------------ STOP EDITING HERE  ----------------------
         assert uniqueTypes == [Integer, String]
@@ -65,6 +74,11 @@ class Koan06 extends GroovyTestCase {
         int count = 0
         // ------------ START EDITING HERE ----------------------
 
+        new File(System.getProperty("user.dir") + File.separator + 'src').eachFileRecurse(FileType.FILES, { File file ->
+            if (file.text.contains('Lorem')) {
+                count++;
+            }
+        })
 
         // ------------ STOP EDITING HERE  ----------------------
         assert count == 3
@@ -77,10 +91,15 @@ class Koan06 extends GroovyTestCase {
         def primesBetween200And250 = []
         // ------------ START EDITING HERE ----------------------
 
+        primesBetween200And250 += (200..250).findAll { isPrimeNumber(it) }
 
         // ------------ STOP EDITING HERE  ----------------------
         assert primesBetween200And250 == [211, 223, 227, 229, 233, 239, 241]
 
+    }
+
+    static boolean isPrimeNumber(number) {
+        (2..<number).findAll { number % it == 0 }.size() == 0
     }
 
 }
