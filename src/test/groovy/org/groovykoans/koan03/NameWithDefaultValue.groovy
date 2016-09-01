@@ -8,7 +8,7 @@
 package org.groovykoans.koan03
 
 class NameWithDefaultValue {
-    String name
+    String name = 'Anonymous'
 
     // ------------ START EDITING HERE ----------------------
 
