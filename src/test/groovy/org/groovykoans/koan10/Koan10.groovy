@@ -35,6 +35,8 @@ class Koan10 extends GroovyTestCase {
         def movieCount
         // ------------ START EDITING HERE ----------------------
 
+        def movies = getMovies()
+        movieCount = movies.size()
 
         // ------------ STOP EDITING HERE  ----------------------
         assert movieCount == 7
@@ -44,6 +46,9 @@ class Koan10 extends GroovyTestCase {
         List<String> moviesWithThe = []
         // ------------ START EDITING HERE ----------------------
 
+        moviesWithThe = movies.findAll { movie ->
+            movie.title.text() ==~ /(?i)^.*the.*?$/
+        }.collect { it.title.text() }
 
         // ------------ STOP EDITING HERE  ----------------------
         assert moviesWithThe.containsAll(['Conan the Barbarian', 'The Expendables', 'The Terminator'])
@@ -52,9 +57,16 @@ class Koan10 extends GroovyTestCase {
         def movieIdsGreaterThan5
         // ------------ START EDITING HERE ----------------------
 
+        movieIdsGreaterThan5 = movies.findAll { movie ->
+            movie.@id.toInteger() > 5
+        }.size()
 
         // ------------ STOP EDITING HERE  ----------------------
         assert movieIdsGreaterThan5 == 2
+    }
+
+    private def getMovies() {
+        new XmlParser().parse('src/test/groovy/org/groovykoans/koan10/movies.xml').movie
     }
 
     void test02_XmlSlurpersReader2() {
@@ -66,10 +78,15 @@ class Koan10 extends GroovyTestCase {
         List<String> sortedList = []
         // ------------ START EDITING HERE ----------------------
 
+        sortedList = getMovies().sort { a, b ->
+            def yearComparator = a.year.text() <=> b.year.text()
+            def titleComparator = a.title.text() <=> b.title.text()
+            return a.year.text() == b.year.text() ? titleComparator : yearComparator
+        }.collect { it.title.text() }
 
         // ------------ STOP EDITING HERE  ----------------------
         assert sortedList == ['Conan the Barbarian', 'The Terminator', 'Predator',
-                'Kindergarten Cop', 'Total Recall', 'True Lies', 'The Expendables']
+                              'Kindergarten Cop', 'Total Recall', 'True Lies', 'The Expendables']
     }
 
     void test03_XmlMarkupBuilder1() {
@@ -91,7 +108,16 @@ class Koan10 extends GroovyTestCase {
         def html
         // ------------ START EDITING HERE ----------------------
 
+        def writer = new StringWriter()
+        def markup = new MarkupBuilder(writer)
 
+        markup.html() {
+            body() {
+                h1('title')
+            }
+        }
+
+        html = writer.toString()
         // ------------ STOP EDITING HERE  ----------------------
         assert formatXml(html) == formatXml("<html><body><h1>title</h1></body></html>")
     }
@@ -108,6 +134,16 @@ class Koan10 extends GroovyTestCase {
         String convertedXml
         // ------------ START EDITING HERE ----------------------
 
+        def writer = new StringWriter()
+        def markup = new MarkupBuilder(writer)
+
+        markup.movies() {
+            getMovies().each {
+                movie(id: it.@id, title: it.title.text(), year: it.year.text())
+            }
+        }
+
+        convertedXml = writer.toString()
 
         // ------------ STOP EDITING HERE  ----------------------
         def expected = """|<movies>
@@ -143,6 +179,7 @@ class Koan10 extends GroovyTestCase {
         def baseDir = 'src/test/groovy/org/groovykoans/koan10'
         // ------------ START EDITING HERE ----------------------
 
+        new AntBuilder().copy(file: "$baseDir/movies.xml", toFile: "$baseDir/movies_copy.xml")
 
         // ------------ STOP EDITING HERE  ----------------------
         assert new File("${baseDir}/movies_copy.xml").exists()
@@ -157,6 +194,9 @@ class Koan10 extends GroovyTestCase {
         def actualChecksum
         // ------------ START EDITING HERE ----------------------
 
+        def builder = new AntBuilder()
+        builder.checksum(file: "$baseDir/movies.xml", property: 'moviesChecksum')
+        actualChecksum = builder.project.properties.moviesChecksum
 
         // ------------ STOP EDITING HERE  ----------------------
         assert actualChecksum == '9160b6a6555e31ebc01f30c1db7e1277'
