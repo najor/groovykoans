@@ -73,7 +73,7 @@ class Koan04 extends GroovyTestCase {
         def resultClosure
         // ------------ START EDITING HERE ----------------------
 
-        resultClosure = { int a, int b -> (a + b) * 2}
+        resultClosure = { int a, int b -> (a + b) * 2 }
 
         // ------------ STOP EDITING HERE  ----------------------
 
@@ -136,6 +136,9 @@ class Koan04 extends GroovyTestCase {
         def prefix = 'src/test/groovy/org/groovykoans/koan04/'
         // ------------ START EDITING HERE ----------------------
 
+        filteredResult.write(new File("$prefix/exercise.txt").filterLine { String line ->
+            !line.startsWith('#')
+        })
 
         // ------------ STOP EDITING HERE  ----------------------
 
