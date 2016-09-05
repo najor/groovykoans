@@ -29,10 +29,11 @@ class Koan12 extends GroovyTestCase {
         // ------------ START EDITING HERE ----------------------
 
 
+        shouldFail MissingMethodException, {
             // ------------ STOP EDITING HERE  ----------------------
             Integer.nonExistentMethod()
             // ------------ START EDITING HERE ----------------------
-
+        }
 
         // ------------ STOP EDITING HERE  ----------------------
 
@@ -49,6 +50,11 @@ class Koan12 extends GroovyTestCase {
         long startTime = System.currentTimeMillis()
         // ------------ START EDITING HERE ----------------------
 
+//        HardWorker.metaClass.work << {int number -> number + 10}
+
+        Expando stubWorker = new Expando()
+        stubWorker.work = {int number -> number + 10}
+        factory.worker = stubWorker
 
         // ------------ STOP EDITING HERE  ----------------------
         factory.work()
@@ -62,6 +68,7 @@ class Koan12 extends GroovyTestCase {
         startTime = System.currentTimeMillis()
         // ------------ START EDITING HERE ----------------------
 
+        StaticFactory.metaClass.getWorker = { -> {int number -> number + 10} as Worker}
 
         // ------------ STOP EDITING HERE  ----------------------
        new StaticFactory(numbers: 1..10).work()
